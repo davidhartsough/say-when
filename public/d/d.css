@@ -1,0 +1,83 @@
+main {
+  max-width: 24rem;
+}
+footer {
+  padding: 1rem 0 2rem;
+  text-align: center;
+}
+button {
+  transition: all 0.15s;
+  background-image: none;
+  text-transform: none;
+  display: block;
+  cursor: pointer;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 1rem;
+  color: var(--font);
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.025rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+  background-color: rgb(var(--opposite-bg) / 1%);
+  user-select: none;
+  box-shadow: 0 0 2px 2px rgb(var(--opposite-bg) / 2%);
+  opacity: 0.9;
+  width: auto;
+  height: auto;
+}
+button:hover,
+button:focus {
+  background-color: transparent;
+  box-shadow: 0 0 4px 4px rgb(var(--opposite-bg) / 8%);
+  opacity: 1;
+}
+button:hover {
+  border-color: var(--border-hover);
+}
+button:focus {
+  border-color: var(--border-focus);
+}
+
+.hours-list {
+  margin: 0.75rem 0 1.125rem;
+  line-height: 1.15;
+}
+
+label {
+  display: block;
+  transition: all 200ms;
+  font-size: 1.25rem;
+  font-weight: 400;
+  cursor: pointer;
+  margin: 0 0 0.25rem;
+  user-select: none;
+  background-color: rgb(255 255 255 / 1%);
+  border: 1px solid rgb(var(--opposite-bg) / 8%);
+  border-radius: 0.125rem;
+  padding: 0.125rem 0.75rem;
+}
+label:hover,
+label:focus {
+  font-weight: 500;
+  box-shadow: 0 0 3px 3px rgb(var(--opposite-bg) / 6%);
+}
+label:hover {
+  background-color: rgb(255 255 255 / 2%);
+  border-color: var(--border-hover);
+}
+label:focus {
+  background-color: transparent;
+  border-color: var(--border-focus);
+}
+label input[type="checkbox"]:checked + span {
+  font-weight: 500;
+}
+label:has(> input[type="checkbox"]:checked) {
+  background-color: hsl(var(--theme-hs) var(--theme-l) / 15%);
+  border-color: var(--theme-hsl);
+}

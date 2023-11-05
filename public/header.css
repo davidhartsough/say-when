@@ -1,0 +1,23 @@
+header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+header p {
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin: 0 0.5rem;
+}
+h1 {
+  font-weight: 300;
+  line-height: 1;
+  font-size: 1.5rem;
+  margin: 0;
+}
+h2 {
+  font-variant: small-caps;
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: 0.025rem;
+  margin: 0;
+}

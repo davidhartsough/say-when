@@ -1,0 +1,97 @@
+main {
+  max-width: 24rem;
+}
+footer {
+  padding: 1rem 0 2rem;
+  text-align: center;
+}
+button,
+input {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: normal;
+  color: var(--font);
+  margin: 0;
+  padding: 0;
+}
+button {
+  transition: all 0.15s;
+  background-image: none;
+  text-transform: none;
+  display: block;
+  cursor: pointer;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.025rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+  background-color: rgb(var(--opposite-bg) / 1%);
+  user-select: none;
+  box-shadow: 0 0 2px 2px rgb(var(--opposite-bg) / 2%);
+  opacity: 0.9;
+  width: auto;
+  height: auto;
+}
+button:hover,
+button:focus {
+  background-color: transparent;
+  box-shadow: 0 0 4px 4px rgb(var(--opposite-bg) / 8%);
+  opacity: 1;
+}
+/* stylelint-disable-next-line selector-no-vendor-prefix */
+input::-moz-placeholder {
+  opacity: 0.75;
+  color: inherit;
+}
+input::placeholder {
+  opacity: 0.75;
+  color: inherit;
+}
+:-moz-focusring {
+  outline: auto;
+}
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+:disabled {
+  cursor: not-allowed;
+}
+label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin: 0 0 0.75rem;
+}
+input {
+  display: block;
+  height: 2rem;
+  padding: 0.25rem 0.5rem;
+  background-color: hsl(220deg 8% var(--faded-bg-l) / 2%);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--border-color);
+  border-radius: 0.25rem;
+  outline: none;
+  width: 100%;
+  margin: 0.25rem 0;
+}
+
+input:hover,
+input:focus,
+button:hover,
+button:focus {
+  background-color: transparent;
+}
+input:hover,
+button:hover {
+  border-color: var(--border-hover);
+}
+input:focus,
+button:focus {
+  border-color: var(--border-focus);
+}

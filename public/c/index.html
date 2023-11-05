@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pick Cities • Say When</title>
+    <meta
+      name="description"
+      content="A hot tool for scheduling and planning a meeting/call with people across different cities and timezones."
+    />
+    <meta
+      name="keywords"
+      content="time, timezone, zone, city, say, when, schedule, plan, meeting, call"
+    />
+    <meta name="author" content="David Hartsough" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Say When" />
+    <meta
+      property="og:description"
+      content="A hot tool for scheduling and planning a meeting/call with people across different cities and timezones."
+    />
+
+    <meta property="og:site_name" content="Say When" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="https://say-when.web.app/icon512.png" />
+    <meta property="og:image:alt" content="Say When logo icon" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Say When" />
+    <meta
+      name="twitter:description"
+      content="A hot tool for scheduling and planning a meeting/call with people across different cities and timezones."
+    />
+    <meta name="twitter:image" content="https://say-when.web.app/icon512.png" />
+    <meta name="twitter:image:alt" content="Say When logo icon" />
+    <meta name="twitter:image:type" content="image/png" />
+    <meta name="twitter:image:width" content="512" />
+    <meta name="twitter:image:height" content="512" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="any" />
+    <link rel="icon" href="/icon16.png" type="image/png" sizes="16x16" />
+    <link rel="icon" href="/icon32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icon192.png" type="image/png" sizes="192x192" />
+    <link
+      rel="apple-touch-icon"
+      href="/apple-icon.png"
+      type="image/png"
+      sizes="180x180"
+    />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1f87ad" />
+    <meta name="msapplication-TileColor" content="#2e2e38" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/base.css" />
+    <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/form.css" />
+    <link rel="stylesheet" href="/c/c.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Say When</h1>
+        <p>•</p>
+        <h2>pick cities</h2>
+      </header>
+      <form action="/t" method="get">
+        <div class="city-select">
+          <p class="mock-select">[You] <span id="approx-loc">...</span></p>
+          <label for="b0" class="busy-box">
+            <input type="checkbox" id="b0" name="b0" value="1" />
+            Busy 9-5
+          </label>
+        </div>
+        <div class="city-select">
+          <div class="city-search">
+            <input
+              type="text"
+              id="city-input-1"
+              autocomplete="off"
+              placeholder="Search for a city"
+            />
+            <div id="city-options-1"></div>
+          </div>
+          <input type="hidden" name="c1" id="c1" />
+          <div id="busy-box-1">
+            <label for="b1" class="busy-box">
+              <input type="checkbox" id="b1" name="b1" value="1" />
+              Busy 9-5
+            </label>
+          </div>
+        </div>
+        <div id="more"></div>
+        <footer>
+          <button type="button" id="add">Add City</button>
+          <button type="submit">Next Step</button>
+        </footer>
+      </form>
+    </main>
+    <script src="/c/app.js" defer></script>
+    <script src="/loc.js" defer></script>
+  </body>
+</html>

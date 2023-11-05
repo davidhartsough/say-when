@@ -1,0 +1,29 @@
+{
+  "name": "say-when",
+  "version": "1.0.0",
+  "description": "just say when",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx rollup -c -w",
+    "start": "npx rollup -c -w",
+    "build": "npx rollup -c"
+  },
+  "author": "davidhartsough",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.3",
+    "rollup": "^4.2.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
+  }
+}
