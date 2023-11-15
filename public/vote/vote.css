@@ -1,0 +1,145 @@
+main {
+  max-width: 28rem;
+}
+h3 {
+  font-weight: 200;
+  line-height: 1;
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem;
+}
+section {
+  position: relative;
+  padding-bottom: 2rem;
+}
+p {
+  margin: 0;
+  line-height: 1;
+}
+h4 {
+  font-weight: 500;
+  line-height: 1;
+  font-size: 1.25rem;
+  margin: 0.5rem 0;
+  text-align: center;
+}
+.chunk {
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+.chunk-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  opacity: 0.9;
+  position: relative;
+}
+.chunk-body {
+  padding: 0.5rem 1rem 0.5rem 0.75rem;
+}
+.row {
+  display: flex;
+  align-items: center;
+  margin: 0.375rem 0;
+}
+.chunk-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: center;
+}
+.hour {
+  flex: 0 0 3rem;
+  width: 3rem;
+  text-align: right;
+  margin-right: 0.25rem;
+}
+.hour-vote {
+  flex: 1 1 auto;
+}
+.options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.vote-btn {
+  flex: 0 1 calc(25% - 0.125rem);
+  border: none;
+  background-image: none;
+  display: block;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  letter-spacing: 0.025rem;
+  user-select: none;
+  height: 1.25rem;
+  margin: 0;
+  opacity: 0.95;
+  transition: transform 0.7s opacity 0.7s;
+}
+.vote-0 {
+  background-color: #fcc;
+  color: #860000;
+}
+.vote-1 {
+  background-color: #fbf5d0;
+  color: #605200;
+}
+.vote-2 {
+  background-color: #d2fbd0;
+  color: #0d5d07;
+}
+.vote-3 {
+  background-color: #96d7ff;
+  color: #003e64;
+}
+.vote-btn:hover,
+.vote-btn:focus {
+  transform: scale(1.05);
+  opacity: 1;
+}
+.vote-btn:focus {
+  z-index: 2;
+  position: relative;
+  box-shadow: 0 0 3px 3px rgb(var(--opposite-bg) / 25%);
+}
+select {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2rem;
+  height: 100%;
+  opacity: 0;
+  cursor: context-menu;
+  text-transform: none;
+}
+.dropdown-icon {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.9;
+  padding: 0.25rem 0.375rem;
+  cursor: context-menu;
+  top: 0;
+  right: 0;
+}
+.dropdown-icon-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-top: 1px;
+  border: 2px solid var(--border-color);
+  border-radius: 1rem;
+}
+.dropdown-icon-arrow {
+  width: 0;
+  height: 0;
+  border-top: 6px solid var(--border-color);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+option.hide {
+  display: none;
+}

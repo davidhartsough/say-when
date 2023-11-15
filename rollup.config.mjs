@@ -7,6 +7,7 @@ const terserOptions = {
   mangle: false,
   keep_classnames: true,
   keep_fnames: true,
+  format: { comments: false },
 };
 
 /**
@@ -49,6 +50,22 @@ export default [
     input: "src/e/app.ts",
     output: {
       file: "public/e/app.js",
+      format: "es",
+    },
+    plugins: [resolve(), typescript(), commonjs(), terser(terserOptions)],
+  },
+  {
+    input: "src/poll/app.ts",
+    output: {
+      file: "public/poll/app.js",
+      format: "es",
+    },
+    plugins: [resolve(), typescript(), commonjs(), terser(terserOptions)],
+  },
+  {
+    input: "src/vote/app.ts",
+    output: {
+      file: "public/vote/app.js",
       format: "es",
     },
     plugins: [resolve(), typescript(), commonjs(), terser(terserOptions)],

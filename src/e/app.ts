@@ -1,6 +1,9 @@
+import addPoll from "../db/polls/add";
+import type { Poll } from "../db/polls/types";
+
 const hoursInput = <HTMLInputElement>document.getElementById("hours")!;
 const daysInput = <HTMLInputElement>document.getElementById("days")!;
-const nameInput = <HTMLInputElement>document.getElementById("name")!;
+const nameInput = <HTMLInputElement>document.getElementById("event-name")!;
 
 function isValidNumber(n: number, max = 24): boolean {
   return !Number.isNaN(n) && Number.isSafeInteger(n) && n >= 0 && n < max;
@@ -64,13 +67,28 @@ function getTimestamps(days: number[], hours: number[]): number[] {
   return timestamps;
 }
 
-document.getElementById("form")!.addEventListener("submit", (ev) => {
+const submitButton = <HTMLButtonElement>document.getElementById("submit-btn")!;
+function setLoading() {
+  submitButton.disabled = true;
+  document.getElementById("loader")!.className = "show";
+}
+
+function getPoll(): Poll {
   const name = nameInput.value;
   const days = getNumsFromKebab(daysInput.value, 7);
   const hours = getNumsFromKebab(hoursInput.value, 24);
   const timestamps = getTimestamps(days, hours);
-  const poll = { name, timestamps };
-  console.log("poll:", poll);
+  return { name, timestamps };
+}
+
+async function savePoll(poll: Poll) {
+  const pollId = await addPoll(poll);
+  window.location.href = `${window.location.origin}/vote/?event=${pollId}`;
+}
+
+document.getElementById("form")!.addEventListener("submit", (ev) => {
+  setLoading();
+  savePoll(getPoll());
   ev.preventDefault();
   return false;
 });

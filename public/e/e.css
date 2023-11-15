@@ -1,6 +1,9 @@
 main {
   max-width: 24rem;
 }
+form {
+  position: relative;
+}
 footer {
   padding: 1rem 0 2rem;
   text-align: center;

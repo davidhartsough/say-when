@@ -1,0 +1,26 @@
+#loader {
+  display: none;
+}
+#loader.show {
+  display: block;
+  position: absolute;
+  inset: -1rem -1rem 0;
+  width: calc(100% + 2rem);
+  height: 100%;
+  border-radius: 0.5rem;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(var(--opposite-bg) / 15%),
+    rgb(var(--opposite-bg) / 15%) 1rem,
+    rgb(var(--opposite-bg) / 85%) 1rem,
+    rgb(var(--opposite-bg) / 85%) 2rem
+  );
+  background-size: 200% 200%;
+  animation: stripe-slide 10s linear infinite;
+}
+
+@keyframes stripe-slide {
+  to {
+    background-position: 100% 100%;
+  }
+}
