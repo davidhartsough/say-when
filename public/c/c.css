@@ -14,11 +14,6 @@ input {
   margin: 0;
   padding: 0;
 }
-/* stylelint-disable-next-line selector-no-vendor-prefix */
-input::-moz-placeholder {
-  opacity: 0.75;
-  color: inherit;
-}
 input::placeholder {
   opacity: 0.75;
   color: inherit;

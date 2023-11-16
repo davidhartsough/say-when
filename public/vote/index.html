@@ -73,6 +73,7 @@
         <button
           type="button"
           id="submit"
+          class="submit"
           disabled
           title="Please vote for all time slots"
         >
@@ -81,6 +82,26 @@
         <div id="loader" class="show"></div>
       </section>
     </main>
+
+    <div id="modal" class="hide">
+      <div id="overlay"></div>
+      <form id="name-form">
+        <label for="given-name">What's your name?</label>
+        <input
+          type="text"
+          placeholder="Name"
+          name="given-name"
+          id="given-name"
+          autocomplete="given-name"
+          maxlength="80"
+          minlength="2"
+          pattern="^[\p{L}]+$"
+          required
+        />
+        <button type="submit" class="submit">Cast your votes</button>
+      </form>
+    </div>
+
     <template id="day-template">
       <div class="day">
         <h4></h4>
@@ -94,18 +115,15 @@
       </div>
     </template>
     <template id="chunk-header-template">
-      <div class="dropdown-icon">
-        <div class="dropdown-icon-circle">
-          <div class="dropdown-icon-arrow"></div>
-        </div>
+      <div>
+        <select>
+          <option selected value disabled>Availability</option>
+          <option value="0">🟥 Busy</option>
+          <option value="1">🟨 Maybe</option>
+          <option value="2">🟩 Free</option>
+          <option value="3">🟦 Prefer</option>
+        </select>
       </div>
-      <select>
-        <option selected value disabled>Group set</option>
-        <option value="0">🟥 Busy</option>
-        <option value="1">🟨 Maybe</option>
-        <option value="2">🟩 Free</option>
-        <option value="3">🟦 Prefer</option>
-      </select>
     </template>
     <template id="hour-template">
       <div class="row">
@@ -126,7 +144,6 @@
             </button>
           </div>
         </div>
-        <input type="hidden" />
       </div>
     </template>
     <script src="/vote/app.js" defer></script>

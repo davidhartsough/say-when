@@ -1,5 +1,6 @@
 import getPoll from "../db/polls/get";
 import type { Poll } from "../db/polls/types";
+import addVote from "../db/votes/add";
 
 function redirectOut() {
   window.location.replace(`${window.location.origin}/c/`);
@@ -11,7 +12,7 @@ if (!eventId || eventId.length < 18) {
   throw new Error("Invalid event id");
 }
 
-getPoll(eventId).then(render); //.catch(redirectOut);
+getPoll(eventId).then(render).catch(console.warn);
 
 type Time = {
   hourNum: number;
@@ -73,6 +74,7 @@ function getDays(timestamps: number[]): Day[] {
 }
 
 const voteToSubmit: Record<string, number> = {};
+let isReady = false;
 
 const getElem = (id: string) => document.getElementById(id);
 const dayTemplate = <HTMLTemplateElement>getElem("day-template")!;
@@ -83,6 +85,9 @@ const chunkHeaderTemplate = <HTMLTemplateElement>(
 const hourTemplate = <HTMLTemplateElement>getElem("hour-template")!;
 const daysContainer = <HTMLDivElement>getElem("days")!;
 const submitBtn = <HTMLButtonElement>getElem("submit")!;
+const modal = <HTMLDivElement>getElem("modal")!;
+const nameForm = <HTMLFormElement>getElem("name-form")!;
+const givenNameInput = <HTMLInputElement>getElem("given-name")!;
 
 const cloneDay = () => dayTemplate.content.cloneNode(true) as HTMLDivElement;
 const cloneChunk = () =>
@@ -91,19 +96,72 @@ const cloneChunkHeader = () =>
   chunkHeaderTemplate.content.cloneNode(true) as HTMLDivElement;
 const cloneHour = () => hourTemplate.content.cloneNode(true) as HTMLDivElement;
 
+const nameRegEx = new RegExp(/\p{L}+/gu);
+
+function isValidTimeStampNumber(ts: number): boolean {
+  return (
+    typeof ts === "number" &&
+    !Number.isNaN(ts) &&
+    Number.isSafeInteger(ts) &&
+    ts > 1600000000000
+  );
+}
+function isValidVoteNumber(n: number): boolean {
+  return (
+    typeof n === "number" &&
+    !Number.isNaN(n) &&
+    Number.isSafeInteger(n) &&
+    n >= 0 &&
+    n <= 3
+  );
+}
+function isValidVote(vote: Record<string, number>): boolean {
+  return Object.entries(vote).every(
+    ([key, val]) =>
+      typeof key === "string" &&
+      isValidTimeStampNumber(Number(key)) &&
+      isValidVoteNumber(val),
+  );
+}
+
+nameForm.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  (
+    nameForm.querySelector(`button[type="submit"]`) as HTMLButtonElement
+  ).disabled = true;
+  const div = document.createElement("div");
+  div.id = "loader";
+  div.className = "show";
+  nameForm.appendChild(div);
+  const name = givenNameInput.value;
+  if (!nameRegEx.test(name) || !isValidVote(voteToSubmit)) {
+    return false;
+  }
+  addVote(eventId, name, voteToSubmit)
+    .then((ok) => {
+      if (ok) {
+        window.location.href = `${window.location.origin}/poll/?event=${eventId}`;
+      }
+    })
+    .catch(console.warn);
+  return false;
+});
+submitBtn.addEventListener("click", () => {
+  if (isReady) {
+    modal.className = "show";
+    submitBtn.disabled = true;
+  }
+});
+
 function checkVotes() {
-  const isReady = Object.values(voteToSubmit).every((v) => v >= 0);
+  isReady = Object.values(voteToSubmit).every((v) => v >= 0);
   submitBtn.disabled = !isReady;
   submitBtn.title = isReady ? "" : "Please vote for all time slots";
 }
 
-function getHourDiv(hourName: string, timestamp: number, chunkNum: number) {
+function getHourDiv(hourName: string, timestamp: number, id: string) {
   const clone = cloneHour();
   clone.id = `hour-${timestamp}`;
-  const hiddenInput = clone.querySelector(
-    `input[type="hidden"]`,
-  )! as HTMLInputElement;
-  hiddenInput.id = `ts-${timestamp}`;
   clone.querySelector(".hour")!.textContent = hourName;
   const buttons = clone.querySelectorAll(".vote-btn");
   buttons.forEach((voteBtn, i) => {
@@ -115,11 +173,10 @@ function getHourDiv(hourName: string, timestamp: number, chunkNum: number) {
       });
       btn.classList.remove("unselected");
       btn.classList.add("selected");
-      const select = getElem(`set-chunk-${chunkNum}`);
-      if (select) {
-        (select as HTMLSelectElement).value = "";
+      const select = getElem(`set-${id}`) as HTMLSelectElement | null;
+      if (select && select.value !== i.toString()) {
+        select.value = "";
       }
-      hiddenInput.value = i.toString();
       voteToSubmit[timestamp] = i;
       checkVotes();
     });
@@ -141,17 +198,17 @@ function getChunkHeaderDiv(id: string): HTMLDivElement {
 }
 function getChunkDiv(chunk: Time[], dayIndex: number): HTMLDivElement {
   const clone = cloneChunk();
-  const chunkBody = clone.querySelector(".chunk-body")!;
-  chunk.forEach(({ hourName, timestamp, chunk }) => {
-    chunkBody.appendChild(getHourDiv(hourName, timestamp, chunk));
-  });
+  const chunkNum = chunk[0].chunk;
+  const id = `chunk-${dayIndex}-${chunkNum}`;
   if (chunk.length > 1) {
-    const chunkNum = chunk[0].chunk;
-    const id = `chunk-${dayIndex}-${chunkNum}`;
-    chunkBody.id = id;
     const header = getChunkHeaderDiv(id);
     clone.querySelector(".chunk-header")!.appendChild(header);
   }
+  const chunkBody = clone.querySelector(".chunk-body")!;
+  chunkBody.id = id;
+  chunk.forEach(({ hourName, timestamp }) => {
+    chunkBody.appendChild(getHourDiv(hourName, timestamp, id));
+  });
   return clone;
 }
 function getDayDiv(day: Day, index: number): HTMLDivElement {
@@ -166,7 +223,7 @@ function getDayDiv(day: Day, index: number): HTMLDivElement {
 
 function render(poll: Poll) {
   document.title = `Vote: "${poll.name}" • Say When`;
-  getElem("event-name")!.innerText = `"${poll.name}"`;
+  getElem("event-name")!.textContent = `"${poll.name}"`;
   getElem("loader")!.className = "hide";
   const timestamps = [...poll.timestamps];
   timestamps.sort((a, b) => a - b);
