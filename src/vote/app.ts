@@ -11,7 +11,7 @@ if (!eventId || eventId.length < 18) {
   throw new Error("Invalid event id");
 }
 
-getPoll(eventId).then(render).catch(redirectOut);
+getPoll(eventId).then(render); //.catch(redirectOut);
 
 type Time = {
   hourNum: number;
@@ -72,111 +72,109 @@ function getDays(timestamps: number[]): Day[] {
   return days;
 }
 
-const emojis = ["🟥", "🟨", "🟩", "🟦"];
-const voteLabels = ["Busy", "Maybe", "Free", "Prefer"];
+const voteToSubmit: Record<string, number> = {};
 
-function getChunkRange(chunk: Time[]): string {
-  const start = chunk[0].hourName;
-  const end = chunk[chunk.length - 1].hourName;
-  if (start.endsWith("am") && end.endsWith("am")) {
-    return `${start.replace("am", "")}-${end}`;
-  }
-  if (start.endsWith("pm") && end.endsWith("pm")) {
-    return `${start.replace("pm", "")}-${end}`;
-  }
-  return `${start}-${end}`;
+const getElem = (id: string) => document.getElementById(id);
+const dayTemplate = <HTMLTemplateElement>getElem("day-template")!;
+const chunkTemplate = <HTMLTemplateElement>getElem("chunk-template")!;
+const chunkHeaderTemplate = <HTMLTemplateElement>(
+  getElem("chunk-header-template")!
+);
+const hourTemplate = <HTMLTemplateElement>getElem("hour-template")!;
+const daysContainer = <HTMLDivElement>getElem("days")!;
+const submitBtn = <HTMLButtonElement>getElem("submit")!;
+
+const cloneDay = () => dayTemplate.content.cloneNode(true) as HTMLDivElement;
+const cloneChunk = () =>
+  chunkTemplate.content.cloneNode(true) as HTMLDivElement;
+const cloneChunkHeader = () =>
+  chunkHeaderTemplate.content.cloneNode(true) as HTMLDivElement;
+const cloneHour = () => hourTemplate.content.cloneNode(true) as HTMLDivElement;
+
+function checkVotes() {
+  const isReady = Object.values(voteToSubmit).every((v) => v >= 0);
+  submitBtn.disabled = !isReady;
+  submitBtn.title = isReady ? "" : "Please vote for all time slots";
 }
 
-function renderHourVote(vote: number | undefined = undefined): string {
-  return `
-    <div class="hour-vote${vote ? " selected" : ""}">
-      ${
-        vote
-          ? `
-        <p>
-          <strong>${voteLabels[vote]}</strong>
-        </p>`
-          : `
-        <div class="options">
-          ${voteLabels
-            .map(
-              (label, i) =>
-                `<button class="vote-btn vote-${i}">${label}</button>`,
-            )
-            .join("\n")}
-        </div>`
+function getHourDiv(hourName: string, timestamp: number, chunkNum: number) {
+  const clone = cloneHour();
+  clone.id = `hour-${timestamp}`;
+  const hiddenInput = clone.querySelector(
+    `input[type="hidden"]`,
+  )! as HTMLInputElement;
+  hiddenInput.id = `ts-${timestamp}`;
+  clone.querySelector(".hour")!.textContent = hourName;
+  const buttons = clone.querySelectorAll(".vote-btn");
+  buttons.forEach((voteBtn, i) => {
+    voteBtn.addEventListener("click", (ev) => {
+      const btn = ev.currentTarget as HTMLButtonElement;
+      buttons.forEach((b) => {
+        b.classList.remove("selected");
+        b.classList.add("unselected");
+      });
+      btn.classList.remove("unselected");
+      btn.classList.add("selected");
+      const select = getElem(`set-chunk-${chunkNum}`);
+      if (select) {
+        (select as HTMLSelectElement).value = "";
       }
-    </div>
-  `;
+      hiddenInput.value = i.toString();
+      voteToSubmit[timestamp] = i;
+      checkVotes();
+    });
+  });
+  return clone;
 }
-
-function renderHour(hourName: string, timestamp: number): string {
-  return `
-    <div class="row" id="ts-${timestamp}">
-      <p class="hour">${hourName}</p>
-      ${renderHourVote()}
-    </div>
-  `;
+function getChunkHeaderDiv(id: string): HTMLDivElement {
+  const clone = cloneChunkHeader();
+  const select = clone.querySelector("select")!;
+  select.id = `set-${id}`;
+  select.addEventListener("change", (ev) => {
+    const { value } = ev.target as HTMLSelectElement;
+    const chunkDiv = getElem(id)! as HTMLDivElement;
+    chunkDiv.querySelectorAll(`.vote-${value}`).forEach((btn) => {
+      (btn as HTMLButtonElement).click();
+    });
+  });
+  return clone;
 }
-
-function renderChunkHeader(chunk: Time[]): string {
-  return `
-    <div class="chunk-header">
-      <p class="chunk-title">${getChunkRange(chunk)}</p>
-      <div class="dropdown-icon">
-        <div class="dropdown-icon-circle">
-          <div class="dropdown-icon-arrow"></div>
-        </div>
-      </div>
-      <select>
-        <option hidden selected value label=" "> </option>
-        ${voteLabels
-          .map(
-            (label, i) => `
-          <option value="${i}">
-            ${emojis[i]} ${label}
-          </option>
-        `,
-          )
-          .join("\n")}
-      </select>
-    </div>
-  `;
-}
-
-function renderChunk(chunk: Time[]): string {
-  if (chunk.length === 1) {
-    return `<div class="chunk"><p>${chunk[0].hourName}</p></div>`;
+function getChunkDiv(chunk: Time[], dayIndex: number): HTMLDivElement {
+  const clone = cloneChunk();
+  const chunkBody = clone.querySelector(".chunk-body")!;
+  chunk.forEach(({ hourName, timestamp, chunk }) => {
+    chunkBody.appendChild(getHourDiv(hourName, timestamp, chunk));
+  });
+  if (chunk.length > 1) {
+    const chunkNum = chunk[0].chunk;
+    const id = `chunk-${dayIndex}-${chunkNum}`;
+    chunkBody.id = id;
+    const header = getChunkHeaderDiv(id);
+    clone.querySelector(".chunk-header")!.appendChild(header);
   }
-  const hours = chunk.map(({ hourName, timestamp }) =>
-    renderHour(hourName, timestamp),
-  );
-  return `
-    <div class="chunk">
-      ${renderChunkHeader(chunk)}
-      <div class="chunk-body">
-        ${hours.join("\n")}
-      </div>
-    </div>
-  `;
+  return clone;
 }
-
-function renderDay(day: Day): string {
-  return `
-    <div class="day">
-      <h4>${day.weekdayName}</h4>
-      ${day.chunks.map(renderChunk).join("\n")}
-    </div>
-  `;
+function getDayDiv(day: Day, index: number): HTMLDivElement {
+  const clone = cloneDay();
+  clone.querySelector("h4")!.textContent = day.weekdayName;
+  const chunkContainer = clone.querySelector(".chunks")!;
+  day.chunks.forEach((chunk) => {
+    chunkContainer.appendChild(getChunkDiv(chunk, index));
+  });
+  return clone;
 }
 
 function render(poll: Poll) {
   document.title = `Vote: "${poll.name}" • Say When`;
-  document.getElementById("event-name")!.innerText = `"${poll.name}"`;
-  document.getElementById("loader")!.className = "hide";
+  getElem("event-name")!.innerText = `"${poll.name}"`;
+  getElem("loader")!.className = "hide";
   const timestamps = [...poll.timestamps];
   timestamps.sort((a, b) => a - b);
+  timestamps.forEach((ts) => {
+    voteToSubmit[ts] = -1;
+  });
   const days = getDays(timestamps);
-  console.log("days:", days);
-  document.getElementById("days")!.innerHTML = days.map(renderDay).join("\n");
+  days.forEach((day, i) => {
+    daysContainer.appendChild(getDayDiv(day, i));
+  });
 }

@@ -70,9 +70,65 @@
       <section>
         <h3 id="event-name">Loading...</h3>
         <div id="days"></div>
+        <button
+          type="button"
+          id="submit"
+          disabled
+          title="Please vote for all time slots"
+        >
+          Submit
+        </button>
         <div id="loader" class="show"></div>
       </section>
     </main>
+    <template id="day-template">
+      <div class="day">
+        <h4></h4>
+        <div class="chunks"></div>
+      </div>
+    </template>
+    <template id="chunk-template">
+      <div class="chunk">
+        <div class="chunk-header"></div>
+        <div class="chunk-body"></div>
+      </div>
+    </template>
+    <template id="chunk-header-template">
+      <div class="dropdown-icon">
+        <div class="dropdown-icon-circle">
+          <div class="dropdown-icon-arrow"></div>
+        </div>
+      </div>
+      <select>
+        <option selected value disabled>Group set</option>
+        <option value="0">🟥 Busy</option>
+        <option value="1">🟨 Maybe</option>
+        <option value="2">🟩 Free</option>
+        <option value="3">🟦 Prefer</option>
+      </select>
+    </template>
+    <template id="hour-template">
+      <div class="row">
+        <p class="hour"></p>
+        <div class="hour-vote">
+          <div class="options">
+            <button class="vote-btn vote-0">
+              <span class="vote-btn-txt">Busy</span>
+            </button>
+            <button class="vote-btn vote-1">
+              <span class="vote-btn-txt">Maybe</span>
+            </button>
+            <button class="vote-btn vote-2">
+              <span class="vote-btn-txt">Free</span>
+            </button>
+            <button class="vote-btn vote-3">
+              <span class="vote-btn-txt">Prefer</span>
+            </button>
+          </div>
+        </div>
+        <input type="hidden" />
+      </div>
+    </template>
     <script src="/vote/app.js" defer></script>
   </body>
 </html>
