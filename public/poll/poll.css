@@ -5,7 +5,7 @@ h3 {
   font-weight: 200;
   line-height: 1;
   font-size: 1.75rem;
-  margin: 0 0 0.75rem;
+  margin: 0 0 1.25rem;
 }
 section {
   position: relative;
@@ -83,4 +83,40 @@ h4 {
   margin: 0.25rem 0;
   padding: 0.25rem 0;
   line-height: 1.25;
+}
+button {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--font);
+  background-image: none;
+  text-transform: none;
+  display: block;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+  background-color: rgb(var(--opposite-bg) / 1%);
+  width: auto;
+  height: auto;
+  outline: none;
+  font-weight: 500;
+  letter-spacing: 0.025rem;
+  user-select: none;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 1.5rem auto;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 2px 2px rgb(var(--opposite-bg) / 7%);
+}
+button:hover {
+  background-color: transparent;
+  border-color: var(--border-hover);
+  box-shadow: 0 0 3px 3px rgb(var(--opposite-bg) / 6%);
+}
+button:focus {
+  background-color: transparent;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 3px 3px rgb(var(--opposite-bg) / 6%);
 }

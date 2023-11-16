@@ -124,9 +124,43 @@ function renderDay(day: Day): string {
   `;
 }
 
+let timer: ReturnType<typeof setTimeout> | undefined = undefined;
+
+function initShareButton(eventName: string) {
+  const baseURL = "https://saywhen.netflify.app/";
+  const url = `${window.location.origin}/vote/?event=${eventId}`;
+  const shareButton = <HTMLButtonElement>document.getElementById("share")!;
+  if (
+    navigator &&
+    navigator.canShare &&
+    navigator.canShare({
+      url: baseURL,
+      text: "When are you free?",
+      title: "Say When",
+    })
+  ) {
+    const shareData = {
+      url,
+      text: `"${eventName}" • Let's plan! When are you free? Share your availability here.`,
+      title: `"${eventName}" • Say When`,
+    };
+    shareButton.addEventListener("click", () => navigator.share(shareData));
+  } else {
+    shareButton.textContent = "Copy Vote Link";
+    shareButton.addEventListener("click", () => {
+      navigator.clipboard.writeText(url);
+      shareButton.textContent = "✓ Got It!";
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        shareButton.textContent = "Copy Vote Link";
+      }, 3000);
+    });
+  }
+}
+
 function render(poll: Poll, votes: Vote[]) {
   document.title = `Poll: "${poll.name}" • Say When`;
-  document.getElementById("event-name")!.innerText = `"${poll.name}"`;
+  document.getElementById("event-name")!.textContent = `"${poll.name}"`;
   document.getElementById("loader")!.className = "hide";
   if (votes.length < 1) {
     document.getElementById("error")!.innerHTML = `
@@ -139,4 +173,5 @@ function render(poll: Poll, votes: Vote[]) {
   timestamps.sort((a, b) => a - b);
   const days = getDays(timestamps, votes);
   document.getElementById("days")!.innerHTML = days.map(renderDay).join("\n");
+  initShareButton(poll.name);
 }
